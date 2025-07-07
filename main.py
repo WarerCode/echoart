@@ -1,6 +1,13 @@
 from core.ConsoleImage import ConsoleImage
+from core.Config import Config
 
-# img = ConsoleImage()
-img = ConsoleImage("assets/tree.png")
-# img.display(effects={"gray": True})
-img.display(effects={"gray": True, "negative": True})
+def main():
+    config = Config()
+    filename = config.getInputFilename()
+    effects = config.getEffectsArgs()
+
+    img = ConsoleImage(filename)
+    img.display(effects)
+
+if __name__ == "main":
+    main()
