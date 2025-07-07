@@ -9,5 +9,5 @@ def main():
     img = ConsoleImage(filename)
     img.display(effects)
 
-if __name__ == "main":
+if __name__ == "__main__":
     main()

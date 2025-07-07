@@ -4,11 +4,11 @@ EFF_NEGATIVE = "negative"
 EFF_GRAY = "gray"
 EFF_SHIFT = "shift"
 
-CALLBACKS = set(
+CALLBACKS = {
     EFF_NEGATIVE,
     EFF_GRAY,
     EFF_SHIFT
-)
+}
 
 class Config:
     def __init__(self):
@@ -43,7 +43,7 @@ class Config:
             add_help=True,      # add '--help' arg
             prog="echoart",     # program name
             description="console graphics CRUD util")
-        parser.add_argument("-I", "input", type=str, required=True,
+        parser.add_argument("-I", "-input", type=str, required=True,
                                  help="input filename")
         parser.add_argument("-o", "--output", type=str,
                                  help="target filename")
