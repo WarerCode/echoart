@@ -7,7 +7,7 @@ from core.Import import importJson, saveImage
 def main():
     try:
         import sys
-        sys.argv = ["main.py","--input", "assets/tree.png", "--output", "image.json"]
+        sys.argv = ["main.py","--input", "assets/tree.png", "--shift", "100", "--output", "image.json"]
         config = Config()
 
         filename = config.getInputFilename()
