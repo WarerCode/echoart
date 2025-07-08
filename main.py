@@ -1,7 +1,7 @@
 from core.ConsoleImage import ConsoleImage
 from core.Config import Config
-import core.Export
 from core.Export import exportJson
+from core.Import import importJson, saveImage
 
 
 def main():
@@ -9,15 +9,22 @@ def main():
         import sys
         sys.argv = ["main.py","--input", "assets/tree.png", "--output", "image.json"]
         config = Config()
-        filename = config.getInputFilename()
-        effects = config.getEffectsArgs()
 
-        img = ConsoleImage(filename)
+        filename = config.getInputFilename()
+        target = config.getTargetFilename()
+        if config.isJsonInput():
+            img = importJson(filename)
+        else:
+            img = ConsoleImage(filename)
+
+        effects = config.getEffectsArgs()
         img.display(effects)
 
-        target = config.getTargetFilename()
         if target != None:
-            exportJson(target, filename, effects)
+            if not config.isJsonInput():
+                exportJson(target, filename, effects)
+            else:
+                saveImage(img, target)
     except Exception as e:
         print(e)
 

@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 EFF_NEGATIVE = "negative"
 EFF_GRAY = "gray"
@@ -37,6 +38,10 @@ class Config:
 
     def getTargetFilename(self) -> str | None:
         return self.args.output
+
+
+    def isJsonInput(self) -> bool:
+        return Path(self.args.input).suffix == ".json"  # with '.'
 
 
     """ vvv noexcept(false) vvv """
