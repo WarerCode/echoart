@@ -7,7 +7,7 @@ from core.Export import exportJson
 def main():
     try:
         import sys
-        sys.argv = ["main.py","--input", "assets/image.jpg", "--output", "image.json"]
+        sys.argv = ["main.py","--input", "assets/tree.png", "--output", "image.json"]
         config = Config()
         filename = config.getInputFilename()
         effects = config.getEffectsArgs()

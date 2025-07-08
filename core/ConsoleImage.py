@@ -1,3 +1,4 @@
+import numpy as np
 from PIL import Image
 import math
 from rich.console import Console
@@ -23,7 +24,6 @@ class ConsoleImage:
         console = Console()
 
         # Открываем изображение
-        print(self.path)
         img = Image.open(self.path)
         
         n = len(self.gradient)
@@ -33,20 +33,33 @@ class ConsoleImage:
 
         # Получаем ширину и высоту
         width, height = img.size
-        k = width/self.max_width
+        k = math.ceil(width/self.max_width)
 
-        for y in range(0, height, math.ceil(k)):
-            for x in range(0, width, math.ceil(k)):
-                pixel = img.getpixel((x, y))
-                if effects.get("negative"):
-                    pixel = Effects.negative(pixel)
-                if effects.get("gray"):
-                    pixel = Effects.gray(pixel)
+        text_image = []
+
+        effexts_chain = []
+        if effects.get("negative"):
+            effexts_chain.append(Effects.negative)
+        if effects.get("gray"):
+            effexts_chain.append(Effects.gray)
+
+        pixels_data = img.load()
+        for y in range(0, height, k):
+            row = []
+            for x in range(0, width, k):
+                pixel = pixels_data[x, y]
+                for effect in effexts_chain:
+                    pixel = effect(pixel)
                 r, g, b = pixel
-                brightness = sum(pixel)/(3*255)
+                brightness = Effects.brightness(pixel)
                 symbol = self.gradient[math.floor((n-1)*brightness)]
-                if brightness > 0.75:
-                    console.print(self.syblos_per_pixel*f"[bold rgb({r},{g},{b})]{symbol}[/]", end="")
-                else:
-                    console.print(self.syblos_per_pixel*f"[rgb({r},{g},{b})]{symbol}[/]", end="")
-            print()
+                row.append(f"[{'bold ' if brightness > 0.75 else ''}rgb({r},{g},{b})]{symbol}[/]")
+            text_image.append(row)
+
+        text_image = np.array(text_image)
+        text_image = np.char.multiply(text_image, 2)
+        length = text_image.size
+        text_image[:, -1] += "\n"
+        text_image = text_image.reshape(length)
+        print_str = "".join(text_image)
+        console.print(print_str)
