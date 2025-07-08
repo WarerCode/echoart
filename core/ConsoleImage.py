@@ -37,14 +37,18 @@ class ConsoleImage:
 
         text_image = []
 
+        effexts_chain = []
+        if effects.get("negative"):
+            effexts_chain.append(Effects.negative)
+        if effects.get("gray"):
+            effexts_chain.append(Effects.gray)
+
         for y in range(0, height, math.ceil(k)):
             row = []
             for x in range(0, width, math.ceil(k)):
                 pixel = img.getpixel((x, y))
-                if effects.get("negative"):
-                    pixel = Effects.negative(pixel)
-                if effects.get("gray"):
-                    pixel = Effects.gray(pixel)
+                for effect in effexts_chain:
+                    pixel = effect(pixel)
                 r, g, b = pixel
                 brightness = Effects.brightness(pixel)
                 symbol = self.gradient[math.floor((n-1)*brightness)]
