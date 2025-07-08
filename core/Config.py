@@ -35,6 +35,10 @@ class Config:
         return self.args.input
 
 
+    def getTargetFilename(self) -> str | None:
+        return self.args.output
+
+
     """ vvv noexcept(false) vvv """
     @staticmethod
     def getParser() -> argparse.ArgumentParser:
@@ -43,7 +47,7 @@ class Config:
             add_help=True,      # add '--help' arg
             prog="echoart",     # program name
             description="console graphics CRUD util")
-        parser.add_argument("-I", "-input", type=str, required=True,
+        parser.add_argument("-I", "--input", type=str, required=True,
                                  help="input filename")
         parser.add_argument("-o", "--output", type=str,
                                  help="target filename")
@@ -63,7 +67,7 @@ class Config:
         effects = self.getEffectsArgs()
 
         for callback in CALLBACKS:
-            if effects[callback] != None:
+            if effects[callback] not in {None, False}:
                 callbacks_names.append(callback)
 
         return callbacks_names
