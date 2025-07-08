@@ -33,7 +33,7 @@ class ConsoleImage:
 
         # Получаем ширину и высоту
         width, height = img.size
-        k = width/self.max_width
+        k = math.ceil(width/self.max_width)
 
         text_image = []
 
@@ -43,19 +43,17 @@ class ConsoleImage:
         if effects.get("gray"):
             effexts_chain.append(Effects.gray)
 
-        for y in range(0, height, math.ceil(k)):
+        pixels_data = img.load()
+        for y in range(0, height, k):
             row = []
-            for x in range(0, width, math.ceil(k)):
-                pixel = img.getpixel((x, y))
+            for x in range(0, width, k):
+                pixel = pixels_data[x, y]
                 for effect in effexts_chain:
                     pixel = effect(pixel)
                 r, g, b = pixel
                 brightness = Effects.brightness(pixel)
                 symbol = self.gradient[math.floor((n-1)*brightness)]
-                if brightness > 0.75:
-                    row.append(f"[bold rgb({r},{g},{b})]{symbol}[/]")
-                else:
-                    row.append(f"[rgb({r},{g},{b})]{symbol}[/]")
+                row.append(f"[{'bold ' if brightness > 0.75 else ''}rgb({r},{g},{b})]{symbol}[/]")
             text_image.append(row)
 
         text_image = np.array(text_image)
