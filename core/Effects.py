@@ -12,3 +12,11 @@ class Effects:
     @classmethod
     def negative(cls, color: tuple=(0,0,0)):
         return (255 - color[0], 255 - color[1], 255 - color[2])
+
+    @classmethod
+    def shift(cls, color: tuple = (0, 0, 0), shift: int = 0):
+        return (
+            (color[0] + shift) % 256,
+            (color[1] + shift) % 256,
+            (color[2] + shift) % 256
+        )
