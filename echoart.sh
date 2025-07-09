@@ -1,3 +1,4 @@
 #!/bin/bash
 python main.py "$@"
-# need to be activated by 'chmod +x'
+echo
+read -p "Press Enter to exit..."
