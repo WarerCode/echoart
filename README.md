@@ -23,11 +23,11 @@
 
 ## ⌨️ Примеры команд
 1. ### Простой вывод изображения:
-  - `python main.py -I cat.jpg`
+  - `echoart -I cat.jpg`
 2. ### Применение эффектов с сохранением:
-  - `python main.py -I landscape.png -o art.json --negative --shift 30`
+  - `echoart -I landscape.png -o art.json --negative --shift 30`
 3. ### Чёрно-белый вывод:
-  - `python main.py -I portrait.jpg --gray`
+  - `echoart -I portrait.jpg --gray`
 
 ## 🔧 Технические детали
 - Использует библиотеку **Rich** для цветного вывода
