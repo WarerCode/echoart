@@ -8,37 +8,33 @@ class ConsoleFile(ConsoleItem):
 
     def __init__(self, path: str="assets/image.json"):
         super().__init__(path)
+        self.img = None
+        with open(self.path, "r", encoding="UTF-8") as file:
+            self.img = json.load(file)
 
     def display(self):
         console = Console()
-
-        # Открываем изображение
-        img = None
-        with open(self.path, "r", encoding="UTF-8") as file:
-            img = json.load(file)
-
-        effects = img.get("effects")
+        
+        effects = self.img.get("effects")
         effects_chain = self.effects_chain(effects)
         
         n = len(self.gradient)
 
-        # Преобразуем в RGB (если это не RGB уже)
-        img = img.convert("RGB")
-
         # Получаем ширину и высоту
-        width, height = img.get("width"), img.get("height")
+        width, height = self.img.get("width"), self.img.get("height")
         k = math.ceil(width/self.max_width)
 
         text_image = []
 
-        pixels_data = img.load()
+        pixels_data = self.img.get("data")
         for y in range(0, height, k):
             row = []
             for x in range(0, width, k):
-                pixel = pixels_data[y][x]
+                pixel = pixels_data[y*width + x]
                 for effect in effects_chain:
                     pixel = effect(pixel)
                 r, g, b = pixel
+                print(pixel)
                 brightness = Effects.brightness(pixel)
                 symbol = self.gradient[math.floor((n-1)*brightness)]
                 if brightness > 0.75:

@@ -8,6 +8,7 @@ class ConsoleImage(ConsoleItem):
 
     def __init__(self, path: str="assets/image.jpg"):
         super().__init__(path)
+        self.img = Image.open(self.path).convert("RGB")
 
     def display(
             self, 
@@ -18,24 +19,18 @@ class ConsoleImage(ConsoleItem):
             }
         ):
         console = Console()
-
-        # Открываем изображение
-        img = Image.open(self.path)
         
         n = len(self.gradient)
 
-        # Преобразуем в RGB (если это не RGB уже)
-        img = img.convert("RGB")
-
         # Получаем ширину и высоту
-        width, height = img.size
+        width, height = self.img.size
         k = math.ceil(width/self.max_width)
 
         effects_chain = self.effects_chain(effects)
 
         text_image = []
 
-        pixels_data = img.load()
+        pixels_data = self.img.load()
         for y in range(0, height, k):
             row = []
             for x in range(0, width, k):
