@@ -2,6 +2,7 @@ from core.ConsoleImage import ConsoleImage
 from core.Config import Config
 from core.Export import exportJson
 from core.Import import importJson, saveImage
+from core.ConsoleFile import ConsoleFile
 
 
 def main():
@@ -11,7 +12,9 @@ def main():
         filename = config.getInputFilename()
         target = config.getTargetFilename()
         if config.isJsonInput():
-            img = importJson(filename)
+            console_file = ConsoleFile(filename)
+            console_file.display()
+            return 0    # success
         else:
             img = ConsoleImage(filename)
 
