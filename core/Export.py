@@ -22,7 +22,7 @@ def exportJson(target: str, filename: str, effects: dict) -> None: #noexcept(fal
     for y in range(0, height):
         for x in range(0, width):
             r, g, b = pixels_data[x,y]
-            pixels.append({"position":[x,y], "rgb": [r,g,b]})
+            pixels.append({"rgb": [r,g,b]})
     data["data"] = pixels
 
     with open(target, "w", encoding="utf8") as f:
