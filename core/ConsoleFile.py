@@ -1,43 +1,40 @@
-from PIL import Image
 import math
 from rich.console import Console
 from core.Effects import Effects
 from core.BaseClass import ConsoleItem
+import json
 
-class ConsoleImage(ConsoleItem):
+class ConsoleFile(ConsoleItem):
 
-    def __init__(self, path: str="assets/image.jpg"):
+    def __init__(self, path: str="assets/image.json"):
         super().__init__(path)
-        self.img = Image.open(self.path).convert("RGB")
+        self.img = None
+        with open(self.path, "r", encoding="UTF-8") as file:
+            self.img = json.load(file)
 
-    def display(
-            self, 
-            effects: dict={
-                "negative": False, 
-                "shift": 0,
-                "gray": False,
-            }
-        ):
+    def display(self):
         console = Console()
+        
+        effects = self.img.get("effects")
+        effects_chain = self.effects_chain(effects)
         
         n = len(self.gradient)
 
         # Получаем ширину и высоту
-        width, height = self.img.size
+        width, height = self.img.get("width"), self.img.get("height")
         k = math.ceil(width/self.max_width)
-
-        effects_chain = self.effects_chain(effects)
 
         text_image = []
 
-        pixels_data = self.img.load()
+        pixels_data = self.img.get("data")
         for y in range(0, height, k):
             row = []
             for x in range(0, width, k):
-                pixel = pixels_data[x, y]
+                pixel = pixels_data[y*width + x]
                 for effect in effects_chain:
                     pixel = effect(pixel)
                 r, g, b = pixel
+                print(pixel)
                 brightness = Effects.brightness(pixel)
                 symbol = self.gradient[math.floor((n-1)*brightness)]
                 if brightness > 0.75:
