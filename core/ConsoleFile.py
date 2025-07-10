@@ -1,26 +1,24 @@
-from PIL import Image
 import math
 from rich.console import Console
 from core.Effects import Effects
 from core.BaseClass import ConsoleItem
+import json
 
-class ConsoleImage(ConsoleItem):
+class ConsoleFile(ConsoleItem):
 
-    def __init__(self, path: str="assets/image.jpg"):
+    def __init__(self, path: str="assets/image.json"):
         super().__init__(path)
 
-    def display(
-            self, 
-            effects: dict={
-                "negative": False, 
-                "shift": 0,
-                "gray": False,
-            }
-        ):
+    def display(self):
         console = Console()
 
         # Открываем изображение
-        img = Image.open(self.path)
+        img = None
+        with open(self.path, "r", encoding="UTF-8") as file:
+            img = json.load(file)
+
+        effects = img.get("effects")
+        effects_chain = self.effects_chain(effects)
         
         n = len(self.gradient)
 
@@ -28,10 +26,8 @@ class ConsoleImage(ConsoleItem):
         img = img.convert("RGB")
 
         # Получаем ширину и высоту
-        width, height = img.size
+        width, height = img.get("width"), img.get("height")
         k = math.ceil(width/self.max_width)
-
-        effects_chain = self.effects_chain(effects)
 
         text_image = []
 
@@ -39,7 +35,7 @@ class ConsoleImage(ConsoleItem):
         for y in range(0, height, k):
             row = []
             for x in range(0, width, k):
-                pixel = pixels_data[x, y]
+                pixel = pixels_data[y][x]
                 for effect in effects_chain:
                     pixel = effect(pixel)
                 r, g, b = pixel
